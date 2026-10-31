@@ -1,0 +1,4 @@
+[theme]
+# Dark by default. Users can switch to Light (or follow the system) from the app menu:
+# the three dots at the top right -> Settings -> Theme.
+base = "dark"
