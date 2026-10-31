@@ -1,13 +1,15 @@
 """Parser for the official final-results text file (26th Knesset seat split and vote totals)."""
 from __future__ import annotations
 
+import json
 import re
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from .config import RESOURCES_DIR, TOTAL_MANDATES
+from .config import DATA_DIR, RESOURCES_DIR, TOTAL_MANDATES
 from .parties import key_26
 
+FINAL_RESULTS_SNAPSHOT = DATA_DIR / "final_results.json"
 FINAL_RESULTS_FILE = RESOURCES_DIR / "תוצאות האמת הסופיות וחלוקת המנדטים לכנסת ה־26.txt"
 
 
@@ -66,5 +68,14 @@ def parse_final_results(text: str) -> FinalResults:
     )
 
 
-def load_final_results(path: Path = FINAL_RESULTS_FILE) -> FinalResults:
+def export_final_results_snapshot(results: FinalResults, path: Path = FINAL_RESULTS_SNAPSHOT) -> None:
+    """Write the parsed figures so the app can run without the source text file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(asdict(results), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def load_final_results(path: Path = FINAL_RESULTS_FILE, snapshot: Path = FINAL_RESULTS_SNAPSHOT) -> FinalResults:
+    """Parse the source text file; if it is absent fall back to the committed snapshot."""
+    if not path.exists() and snapshot.exists():
+        return FinalResults(**json.loads(snapshot.read_text(encoding="utf-8")))
     return parse_final_results(path.read_text(encoding="utf-8"))

@@ -6,13 +6,14 @@ are kept as a separate numeric prefix, which is how the tables are laid out in e
 """
 from __future__ import annotations
 
+import json
 import logging
 import re
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import date
 from pathlib import Path
 
-from .config import RESOURCES_DIR, TOTAL_MANDATES
+from .config import DATA_DIR, RESOURCES_DIR, TOTAL_MANDATES
 from .parties import PASSING_26, is_ignorable_row, key_26, normalize_name
 
 logger = logging.getLogger(__name__)
@@ -203,13 +204,41 @@ def parse_poll_pdf(path: Path, channel: str) -> Poll:
     return parsed
 
 
-def load_all_polls(resources_dir: Path = RESOURCES_DIR) -> dict[str, Poll]:
-    """Parse every channel PDF; a missing file becomes a Poll with ``error`` set."""
+POLLS_SNAPSHOT = DATA_DIR / "polls.json"
+
+
+def export_polls_snapshot(polls: dict[str, Poll], path: Path = POLLS_SNAPSHOT) -> None:
+    """Write only the extracted figures (no PDF content) so the app can run without the source PDFs."""
+    payload = {}
+    for channel, poll in polls.items():
+        record = asdict(poll)
+        record["poll_date"] = poll.poll_date.isoformat() if poll.poll_date else None
+        payload[channel] = record
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def load_polls_snapshot(path: Path = POLLS_SNAPSHOT) -> dict[str, Poll]:
+    """Read the committed snapshot; returns an empty dict if it does not exist."""
+    if not path.exists():
+        return {}
+    polls = {}
+    for channel, record in json.loads(path.read_text(encoding="utf-8")).items():
+        record["poll_date"] = date.fromisoformat(record["poll_date"]) if record["poll_date"] else None
+        polls[channel] = Poll(**record)
+    return polls
+
+
+def load_all_polls(resources_dir: Path = RESOURCES_DIR, snapshot: Path = POLLS_SNAPSHOT) -> dict[str, Poll]:
+    """Parse every channel PDF; if a PDF is absent use the committed snapshot, else set ``error``."""
+    saved = load_polls_snapshot(snapshot)
     polls: dict[str, Poll] = {}
     for channel, filename in CHANNEL_FILES.items():
         path = resources_dir / filename
-        if not path.exists():
-            polls[channel] = Poll(channel=channel, filename=filename, error="file not found")
-        else:
+        if path.exists():
             polls[channel] = parse_poll_pdf(path, channel)
+        elif channel in saved:
+            polls[channel] = saved[channel]
+        else:
+            polls[channel] = Poll(channel=channel, filename=filename, error="file not found")
     return polls

@@ -74,3 +74,14 @@ def test_locality_page_parsing():
     assert e26["parties"]["הליכוד"] == 11_622
     assert e26["national_pct"]["הליכוד"] == 20.5
     assert sum(e26["parties"].values()) == e26["valid"]
+
+
+def test_snapshots_are_used_when_source_files_are_absent(tmp_path):
+    from knesset_stats.polls import POLLS_SNAPSHOT
+    from knesset_stats.truth import FINAL_RESULTS_SNAPSHOT
+
+    polls = load_all_polls(resources_dir=tmp_path)
+    assert all(p.error is None and p.mandates and p.n for p in polls.values())
+    final = load_final_results(path=tmp_path / "missing.txt")
+    assert sum(final.mandates.values()) == 120
+    assert POLLS_SNAPSHOT.exists() and FINAL_RESULTS_SNAPSHOT.exists()

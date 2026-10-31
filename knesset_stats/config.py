@@ -3,6 +3,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RESOURCES_DIR = PROJECT_ROOT / "resources"
+DATA_DIR = PROJECT_ROOT / "data"  # committed snapshots of the figures extracted from RESOURCES_DIR
 CACHE_DIR = PROJECT_ROOT / ".cache"
 
 BASE_URL = "https://elections.kaplanopensource.co.il"

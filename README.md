@@ -17,8 +17,11 @@ page to right-to-left). Translations live in `knesset_stats/i18n.py`, keyed by t
 
 ## Data sources and credits
 All data belongs to its original publishers and is used here for non-commercial statistical analysis.
-The `resources/` folder is git-ignored because the poll documents are third-party material; to run the
-app locally, place the files below in `resources/`.
+The `resources/` folder (original poll PDFs and results text) is git-ignored because it is third-party
+material. Only the figures extracted from it are committed, as `data/polls.json` and
+`data/final_results.json`; the app reads the original files when present and these snapshots otherwise
+(so a fresh clone or a public deployment works without `resources/`). After changing a parser or a source
+file, regenerate the snapshots with `uv run python scripts/export_snapshots.py`.
 
 - **Election results per locality:** [Kaplan Open Source - Elections](https://elections.kaplanopensource.co.il/locality/)
   (1,232 locality pages, scraped politely with delay and cached in `.cache/` after the first run, which takes

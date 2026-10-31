@@ -1,0 +1,21 @@
+{
+  "mandates": {
+    "likud": 27,
+    "yashar": 21,
+    "together": 12,
+    "joint_list": 11,
+    "democrats": 8,
+    "raam": 8,
+    "yisrael_beiteinu": 7,
+    "otzma": 7,
+    "utj": 7,
+    "shas": 6,
+    "rz": 6
+  },
+  "turnout_pct": 77.9,
+  "counted_votes": 5716665,
+  "valid_votes": 5690778,
+  "invalid_votes": 25887,
+  "threshold_pct": 3.25,
+  "threshold_votes": 184947
+}
