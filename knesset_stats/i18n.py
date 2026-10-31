@@ -19,6 +19,8 @@ HE: dict[str, str] = {
     "Knesset Stats | Polls vs Results": "סטטיסטיקת הכנסת | סקרים מול תוצאות",
     "Settings": "הגדרות",
     "Data sources": "מקורות הנתונים",
+    "Created by [Yarin Shohat](https://www.linkedin.com/in/yarinsh/)":
+        "נוצר על ידי [Yarin Shohat](https://www.linkedin.com/in/yarinsh/)",
     "Election results per locality: [Kaplan Open Source - Elections](https://elections.kaplanopensource.co.il/"
     "locality/), based on the official results of the Central Elections Committee.":
         "תוצאות הבחירות לפי יישוב: [Kaplan Open Source - Elections](https://elections.kaplanopensource.co.il/"

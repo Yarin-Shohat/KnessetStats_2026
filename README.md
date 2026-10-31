@@ -3,6 +3,8 @@
 A Streamlit dashboard that runs six statistical tests on the 25th and 26th Knesset elections and on
 six TV-channel polls.
 
+Created by [Yarin Shohat](https://www.linkedin.com/in/yarinsh/).
+
 | Tab | Test |
 |---|---|
 | 1 | Paired t-test / Wilcoxon on per-locality change in a party's share |

@@ -143,6 +143,8 @@ with st.sidebar:
                  "that conducted them. Only the extracted figures are analysed."))
     st.caption(t("All data belongs to its original publishers and is used for non-commercial statistical "
                  "analysis."))
+    st.divider()
+    st.caption(t("Created by [Yarin Shohat](https://www.linkedin.com/in/yarinsh/)"))
 
 st.title(t("📊 Knesset 26 vs 25: election shifts and TV-poll accuracy"))
 st.info(t("The six PDFs are **pre-election polls** (3 Aug - 23 Oct 2026), not exit polls: the election was on "
